@@ -1,4 +1,5 @@
 # twitch-api
 
-https://twitch-game-information.herokuapp.com/
+https://game-information.herokuapp.com/
+
 # twitch-dashboard
