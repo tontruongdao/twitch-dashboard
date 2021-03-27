@@ -5,16 +5,16 @@ import React from 'react'
 // },[])
 
 const App = () => {
-  const [ hello, setHello ] = React.useState("")
+  const [ chess, setChess ] = React.useState("")
 
   React.useEffect(()=> {
     console.log("useEffect")
-    fetch("/api").then(res => res.json()).then(json => setHello(json.data));
+    fetch("/api/stream/743").then(res => res.json()).then(json => setChess(json.game));
   },[])
   
   return (
     <div>
-          {hello}
+          {chess}
     </div>
   );
 }
