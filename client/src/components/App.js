@@ -9,12 +9,12 @@ const App = () => {
 
   React.useEffect(()=> {
     console.log("useEffect")
-    fetch("/api/stream/743").then(res => res.json()).then(json => setChess(json.game));
+    fetch("/api/views").then(res => res.json()).then(json => console.log(json));
   },[])
   
   return (
     <div>
-          {chess}
+          hello{chess}
     </div>
   );
 }
