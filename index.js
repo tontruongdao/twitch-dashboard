@@ -1,14 +1,34 @@
 const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
 const morgan = require("morgan");
 const path = require("path");
 const { getToken, getStreams, getGames } = require("./helpers");
 require("dotenv").config();
 
-const app = express();
-
-const PORT = process.env.PORT || 4000;
+const port = process.env.PORT || 4000;
+const { json } = require("body-parser");
 
 const buildPath = path.join(__dirname, "client/build");
+
+const app = express();
+
+const getViews = async () => {
+  try {
+    const AT = await getToken("https://id.twitch.tv/oauth2/token");
+    const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
+    const VIEWS = await getStreams(
+      "https://api.twitch.tv/helix/streams",
+      GAMES,
+      AT
+    );
+    // console.log(VIEWS)
+    return(VIEWS);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 
 app
   .use(function (req, res, next) {
@@ -60,4 +80,38 @@ app
     });
   }
 
-  app.listen(PORT, () => console.log(`listening on port: ${PORT}`));
+const server = http.createServer(app);
+
+const io = socketIo(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      credentials: true
+    }
+}); // < Interesting!
+
+let interval;
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 5000);
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+    clearInterval(interval);
+  });
+});
+
+const getApiAndEmit = async socket => {
+  const response = new Date();
+  const game = await getViews()
+
+  // const emitArray = [response, game]
+  // console.log(emmitArray)
+  // Emitting a new message. Will be consumed by the client
+  socket.emit("FromAPI", response);
+  console.log(response, game)
+};
+
+server.listen(port, () => console.log(`Listening on port ${port} `));

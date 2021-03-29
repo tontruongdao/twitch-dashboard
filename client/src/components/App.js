@@ -1,10 +1,16 @@
 import React from 'react'
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "http://localhost:4000";
+
 
 const App = () => {
 
   // React States
   const [ loading, setLoading ] = React.useState(false)
   const [ games, setGames ] = React.useState("")
+
+  const [response, setResponse] = React.useState("");
+
   
   // Game Data
   let chessData = null
@@ -15,14 +21,22 @@ const App = () => {
 
   // React useEffect to fetch data on API
   React.useEffect(() => {
-    // console.log("useEffect")
-    setLoading(true)
-    fetch("/api/views")
-      .then(res => res.json())
-        .then(json => {
-          setGames(json);
-          setLoading(false)
-        })
+
+    // setLoading(true)
+    // fetch("/api/views")
+    //   .then(res => res.json())
+    //     .then(json => {
+    //       setGames(json);
+    //       setLoading(false)
+    //     })
+
+    // Socket
+    const socket = socketIOClient(ENDPOINT);
+    socket.on("FromAPI", data => {
+      setResponse(data);
+    });
+    return () => socket.disconnect();
+
   },[])
 
   if(games){
@@ -35,8 +49,9 @@ const App = () => {
     heartData = findHeart
     const findRocket= games.find( game => game.id === "30921" )
     rocketData = findRocket
-
   }
+
+  console.log(response)
 
   return (
     <div>
@@ -65,7 +80,9 @@ const App = () => {
         </div>
       </div>
       ) : (
-      <div>Loading...</div>
+      <div>
+                  It's <time dateTime={response}>{response}</time>
+      </div>
       )}
 
     </div>
