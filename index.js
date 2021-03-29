@@ -106,12 +106,12 @@ io.on("connection", (socket) => {
 const getApiAndEmit = async socket => {
   const response = new Date();
   const game = await getViews()
-
   // const emitArray = [response, game]
   // console.log(emmitArray)
   // Emitting a new message. Will be consumed by the client
-  socket.emit("FromAPI", response);
-  console.log(response, game)
+  socket.emit("FromAPI", game);
+  // console.log(game[2])
+  // console.log(game)
 };
 
 server.listen(port, () => console.log(`Listening on port ${port} `));
