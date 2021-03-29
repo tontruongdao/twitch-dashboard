@@ -1,6 +1,7 @@
 import React from 'react'
 import socketIOClient from "socket.io-client";
-const ENDPOINT = "https://truong-twitch-dashboard.herokuapp.com/http://localhost:4000";
+const ENDPOINT = "https://truong-twitch-dashboard.herokuapp.com";
+// const ENDPOINT = "http://localhost:4000";
 
 
 const App = () => {
