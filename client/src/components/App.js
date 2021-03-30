@@ -18,15 +18,17 @@ const App = () => {
   // ##########       React States
   const [ loading, setLoading ] = React.useState(false)
   const [ games, setGames ] = React.useState([])
+  const [ time, setTime ] = React.useState('')
 
   // ##########       React useEffect to fetch data on API
   React.useEffect(() => {
 
     setLoading(true)
-
     //  ##########    Socket
     const socket = socketIOClient(ENDPOINT);
     socket.on("FromAPI",data => {
+      const newTime = new Date().toString()
+      setTime(newTime)
       setGames(data)
       setLoading(false)
     });
@@ -40,6 +42,7 @@ const App = () => {
         <>
           <ChessSocket data={games}/>
           <Chart data={games} />
+          <div>Last update at: {time}</div>
         </>
       ) : (
       <div>

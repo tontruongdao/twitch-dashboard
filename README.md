@@ -1,6 +1,6 @@
 # Twitch API Demo
 
-https://game-information.herokuapp.com/
+https://truong-twitch-dashboard.herokuapp.com/
 
 this is a quick demo on using Twitch's API on a fullstack app with React and Node Express server.
 
