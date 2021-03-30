@@ -1,6 +1,11 @@
 import React from 'react'
 import socketIOClient from "socket.io-client";
 
+import Spinner from './Spinner'
+import ChessSocket from './ChessSocket'
+import Chart from './Chart'
+
+// ##########        Snippet for Heroku Deploy to work with Socket
 let ENDPOINT = "http://localhost:4000";
 
 if (process.env.NODE_ENV === 'production') {
@@ -8,67 +13,37 @@ if (process.env.NODE_ENV === 'production') {
 } 
 
 
-
 const App = () => {
 
-  // React States
+  // ##########       React States
   const [ loading, setLoading ] = React.useState(false)
-  const [ games, setGames ] = React.useState("")
+  const [ games, setGames ] = React.useState([])
 
-
-
-  // React useEffect to fetch data on API
+  // ##########       React useEffect to fetch data on API
   React.useEffect(() => {
 
     setLoading(true)
-    // fetch("/api/views")
-    //   .then(res => res.json())
-    //     .then(json => {
-    //       setGames(json);
-    //       setLoading(false)
-    //     })
 
-    // Socket
+    //  ##########    Socket
     const socket = socketIOClient(ENDPOINT);
-    socket.on("FromAPI", data => {
-      // setResponse(data);
-      console.log(data)
+    socket.on("FromAPI",data => {
       setGames(data)
-      // console.log(response)
+      setLoading(false)
     });
-    console.log(games)
-    setLoading(false)
     return () => socket.disconnect();
   },[])
-
-  // Variables
-  let chess;
-
-  if(games){
-    console.log(`game loaded are ${games}`)
-    chess = games[0]
-    console.log (`The chess variable is ${chess.name}`)
-  }
 
   return (
     <div>
       <h1> Truong Dashboard Project</h1>
-      {!loading && games ? (
-        <div>
-        {/* Socket */}
-        <div>
-          <h2>Socket Data</h2>
-          <div>Name:{chess.name}</div>
-          <div>Views:{chess.total_views}</div>
-        </div>
-        {/* Victory */}
-        <div>
-          <h3> Line Chart </h3>
-        </div>
-      </div>
+      {!loading ? (
+        <>
+          <ChessSocket data={games}/>
+          <Chart data={games} />
+        </>
       ) : (
       <div>
-                  It's loading
+        <Spinner/>
       </div>
       )}
 

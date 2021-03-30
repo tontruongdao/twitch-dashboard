@@ -45,31 +45,31 @@ app
   .use(morgan("tiny"))
   .use(express.static(buildPath))
 
-  .get("/api/games", async (req, res) => {
-    try {
-      const AT = await getToken("https://id.twitch.tv/oauth2/token");
-      const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
+  // .get("/api/games", async (req, res) => {
+  //   try {
+  //     const AT = await getToken("https://id.twitch.tv/oauth2/token");
+  //     const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
 
-      res.send(GAMES);
-    } catch (error) {
-      console.log(error);
-    }
-  })
+  //     res.send(GAMES);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // })
 
-  .get("/api/views", async (req, res) => {
-    try {
-      const AT = await getToken("https://id.twitch.tv/oauth2/token");
-      const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
-      const VIEWS = await getStreams(
-        "https://api.twitch.tv/helix/streams",
-        GAMES,
-        AT
-      );
-      res.send(VIEWS);
-    } catch (error) {
-      console.log(error);
-    }
-  })
+  // .get("/api/views", async (req, res) => {
+  //   try {
+  //     const AT = await getToken("https://id.twitch.tv/oauth2/token");
+  //     const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
+  //     const VIEWS = await getStreams(
+  //       "https://api.twitch.tv/helix/streams",
+  //       GAMES,
+  //       AT
+  //     );
+  //     res.send(VIEWS);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // })
 
   if (process.env.NODE_ENV === 'production') {
     // Serve any static files
@@ -82,12 +82,14 @@ app
 
 const server = http.createServer(app);
 
+
+// ###########   Socket.io
 const io = socketIo(server, {
     cors: {
       origin: "http://localhost:3000",
       credentials: true
     }
-}); // < Interesting!
+});
 
 let interval;
 
@@ -96,7 +98,7 @@ io.on("connection", (socket) => {
   if (interval) {
     clearInterval(interval);
   }
-  interval = setInterval(() => getApiAndEmit(socket), 30000);
+  interval = setInterval(() => getApiAndEmit(socket), 10000);
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     clearInterval(interval);
@@ -106,12 +108,7 @@ io.on("connection", (socket) => {
 const getApiAndEmit = async socket => {
   const response = new Date();
   const game = await getViews()
-  // const emitArray = [response, game]
-  // console.log(emmitArray)
-  // Emitting a new message. Will be consumed by the client
   socket.emit("FromAPI", game);
-  // console.log(game[2])
-  // console.log(game)
 };
 
 server.listen(port, () => console.log(`Listening on port ${port} `));
