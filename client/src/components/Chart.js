@@ -21,7 +21,7 @@ const Chart = ({data}) => {
                     </div> */}
                     <Bar 
                         data={{
-                            labels: [`${dotaData.name}}`, `${heartData.name}`, `${rocketData.name}`],
+                            labels: [`${dotaData.name}`, `${heartData.name}`, `${rocketData.name}`],
                             datasets: [
                                 {
                                     label: "# of viewers",
