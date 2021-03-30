@@ -48,7 +48,7 @@ const App = () => {
             <ChessSocket data={games}/>
             <Chart data={games} />
           </FirstSection>
-          <Time>Last update at: {time}</Time>
+          <Time>Last update on: {time}</Time>
         </Container>
         ) : (
         <div>
