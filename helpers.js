@@ -74,9 +74,26 @@ const getGames = async (url, accessToken) => {
   return result.data;
 };
 
+const getViews = async () => {
+  try {
+    const AT = await getToken("https://id.twitch.tv/oauth2/token");
+    const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
+    const VIEWS = await getStreams(
+      "https://api.twitch.tv/helix/streams",
+      GAMES,
+      AT
+    );
+    // console.log(VIEWS)
+    return(VIEWS);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   getToken,
   getStreams,
   getGames,
   countViews,
+  getViews
 };

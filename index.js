@@ -3,7 +3,7 @@ const http = require("http");
 const socketIo = require("socket.io");
 const morgan = require("morgan");
 const path = require("path");
-const { getToken, getStreams, getGames } = require("./helpers");
+const { getToken, getStreams, getGames, getViews } = require("./helpers");
 require("dotenv").config();
 
 const port = process.env.PORT || 4000;
@@ -12,23 +12,6 @@ const { json } = require("body-parser");
 const buildPath = path.join(__dirname, "client/build");
 
 const app = express();
-
-const getViews = async () => {
-  try {
-    const AT = await getToken("https://id.twitch.tv/oauth2/token");
-    const GAMES = await getGames("https://api.twitch.tv/helix/games", AT);
-    const VIEWS = await getStreams(
-      "https://api.twitch.tv/helix/streams",
-      GAMES,
-      AT
-    );
-    // console.log(VIEWS)
-    return(VIEWS);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 
 app
   .use(function (req, res, next) {
@@ -98,7 +81,7 @@ io.on("connection", (socket) => {
   if (interval) {
     clearInterval(interval);
   }
-  interval = setInterval(() => getApiAndEmit(socket), 10000);
+  interval = setInterval(() => getApiAndEmit(socket), 30000);
   socket.on("disconnect", () => {
     console.log("Client disconnected");
     clearInterval(interval);
