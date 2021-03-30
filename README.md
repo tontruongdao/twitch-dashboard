@@ -2,7 +2,9 @@
 
 https://truong-twitch-dashboard.herokuapp.com/
 
-this is a quick demo on using Twitch's API on a fullstack app with React and Node Express server.
+This is a quick demo on using Twitch's API using socket.io on a fullstack app with React and Node Express server.
+The application rerenders the data every 20 seconds, to not exceed twitch API fetch request.
+I used "socket.io", "chart.js" to help on certain app capability and used "styled-components" for styling.
 
 ### Installation
 

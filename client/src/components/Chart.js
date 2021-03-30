@@ -1,6 +1,8 @@
 import React from 'react'
 import { Bar }from 'react-chartjs-2'
+import styled from 'styled-components';
 
+import { theme } from './THEMES'
 import Spinner from './Spinner'
 
 
@@ -11,8 +13,7 @@ const Chart = ({data}) => {
     const rocketData = data.find(game => game.id === "30921");
 
         return (
-            <div>
-                <h1> ChartJS</h1>
+            <Wrapper>
                 {dotaData ? (
                 <>
                     {/* <div>
@@ -30,10 +31,10 @@ const Chart = ({data}) => {
                                 }
                             ]
                         }}
-                        height={500}
-                        width={1000}
+                        height={100}
+                        width={400}
                         options= {{
-                            // maintainAspectRatio : false
+                            // maintainAspectRatio : false,
                             responsive: true,
                             scales: {
                                 yAxes: [{
@@ -50,8 +51,17 @@ const Chart = ({data}) => {
                 <Spinner/>
                 </div>
                 )}
-            </div>
+            </Wrapper>
         )
 }
+
+const Wrapper = styled.div`
+    background-color: ${theme.primaryLight};
+    flex:5;
+    margin: 3vh 3vw;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 1rem 1rem ${theme.primaryLight};
+`
 
 export default Chart
